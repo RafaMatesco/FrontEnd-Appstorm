@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 const SearchBar = styled.div`
-    font-size: 3vh;
+    font-size: 2vh;
     margin-top: 3vh;
 
     button{
