@@ -1,8 +1,7 @@
-import {useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useState} from 'react';
 
-import { Userprops } from '../types/types';
+import { Userprops } from '../types/UserType';
 
 import SearchBar from '../components/SearchBar';
 import Perfil from '../components/Perfil';
@@ -11,25 +10,52 @@ import GitHubService from '../services/GitHubService';
 
 export default function LandingPage(){
     const [UserDigitado, setUserDigitado] = useState({user:""})
-    const [User, setUser] = useState<Userprops>({name:"", location:"", bio:"", public_repos:"", followers:"", following:"", avatar_url:""})
-
-    const navigate = useNavigate()
+    const [User, setUser] = useState<Userprops | null>({name:"", location:"", bio:"", public_repos:"", followers:"", following:"", avatar_url:"", login:""})
+    const [Repos, setRepos] = useState()
+    const [isVisible, setIsVisible] = useState(false); // Estado para controlar a visibilidade do elemento perfil
+    const [error, setError] = useState(false)
     
-    const LoadUser = async ()=> {
+    async function CarregaDadosUser(username:string){
+        return await GitHubService.getUserData(username)
+    }
+    async function CarregaDadosRepos(username:string){
+        return await GitHubService.getReposData(username)
+    }
+
+    const LoadDados = async ()=> {
+        setError(false)
+        setUser(null)
+
         if(UserDigitado != null){
-            const res = await GitHubService.getData(UserDigitado.user)
-            const data = res.data
-            const {name, location, bio, public_repos, followers, following, avatar_url} = data
-            const Userdata: Userprops = {
-                name,
-                location,
-                bio,
-                public_repos,
-                followers,
-                following,
-                avatar_url
+            try{
+                const ReqUser = await CarregaDadosUser(UserDigitado.user)
+                const ReqRepos = await CarregaDadosRepos(UserDigitado.user)
+                const dadosUser = ReqUser.data
+                const dadosRepos = ReqRepos.data
+
+                const {name, location, bio, public_repos, followers, following, avatar_url, login} = dadosUser
+                const Userdata: Userprops = {
+                    name,
+                    location,
+                    bio,
+                    public_repos,
+                    followers,
+                    following,
+                    avatar_url,
+                    login
+                }
+                setUser(Userdata)
+                setRepos(dadosRepos)
+            }catch{
+                setError(true)
             }
-            setUser(Userdata)
+
+            const toggleVisibility = () => {
+                setIsVisible(!isVisible); // Inverte o estado de visibilidade
+            };
+            if(isVisible === false){
+                toggleVisibility()
+            }
         }
         
     }
@@ -40,8 +66,9 @@ export default function LandingPage(){
             <input type="text" id='username' placeholder='username'
                 onChange={(event)=> setUserDigitado({...UserDigitado, user: event.target.value})}
             /> <br/>
-            <button type='submit' onClick={()=> LoadUser()}>Pesquisar</button>
-            {User &&  <Perfil dadosPerfil={User}></Perfil>}
+            <button type='submit' onClick={()=> LoadDados()}>Pesquisar</button>
+            {isVisible && User && <Perfil DadosPerfil={User} DadosRepos={Repos}></Perfil>}
+            {error && <><br/>Usuário não encontrado!</>}
         </SearchBar>
     )
 }

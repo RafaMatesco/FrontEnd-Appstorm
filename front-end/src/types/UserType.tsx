@@ -5,5 +5,6 @@ export type Userprops = {
     public_repos: string,
     followers: string,
     following: string,
-    avatar_url: string
+    avatar_url: string,
+    login: string
 }
