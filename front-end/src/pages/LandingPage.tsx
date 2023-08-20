@@ -12,7 +12,8 @@ export default function LandingPage(){
     const [UserDigitado, setUserDigitado] = useState({user:""})
     const [User, setUser] = useState<Userprops | null>({name:"", location:"", bio:"", public_repos:"", followers:"", following:"", avatar_url:"", login:""})
     const [Repos, setRepos] = useState()
-    const [isVisible, setIsVisible] = useState(false); // Estado para controlar a visibilidade do elemento perfil
+    const [isVisible, setIsVisible] = useState(false)
+    const [FavsVisible, setFavsVisible] = useState(false)
     const [error, setError] = useState(false)
     
     async function CarregaDadosUser(username:string){
@@ -23,6 +24,7 @@ export default function LandingPage(){
     }
 
     const LoadDados = async ()=> {
+        //localStorage.clear()
         setError(false)
         setUser(null)
 
@@ -60,14 +62,93 @@ export default function LandingPage(){
         
     }
 
+    const LoadFavorito = async (favorito: any)=> {
+        setError(false)
+
+        if(UserDigitado != null){
+            try{
+                const ReqUser = await CarregaDadosUser(favorito)
+                const ReqRepos = await CarregaDadosRepos(favorito)
+                const dadosUser = ReqUser.data
+                const dadosRepos = ReqRepos.data
+
+                const {name, location, bio, public_repos, followers, following, avatar_url, login} = dadosUser
+                const Userdata: Userprops = {
+                    name,
+                    location,
+                    bio,
+                    public_repos,
+                    followers,
+                    following,
+                    avatar_url,
+                    login
+                }
+                setUser(Userdata)
+                setRepos(dadosRepos)
+            }catch{
+                setError(true)
+            }
+        }
+        
+    }
+
+    var favoritos = localStorage.getItem("name")
+    var newFavoritos: any
+    var excluido: boolean = false
+    const excluiFavorito = (removido: string)=> {
+        if(favoritos != null){
+            newFavoritos = favoritos.replace(' '+removido, '')
+            newFavoritos = favoritos.replace(removido+' ', '')
+            newFavoritos = favoritos.replace(removido, '')
+            localStorage.clear()
+            localStorage.setItem("name", newFavoritos)
+            excluido = true
+            setFavsVisible(false)
+        }
+    }
+
+    
+    const MostrarFavoritos = () => {
+        if(favoritos != null){
+            if(excluido === true){
+                favoritosArray = newFavoritos
+            }
+            var favoritosArray = favoritos.split(" ")
+                return(
+                    favoritosArray.map(favorito => {
+                        if(favorito != ''){
+                            return(
+                                <>
+                                <button onClick={()=> {
+                                            LoadFavorito(favorito)
+                                        }
+                                }>{favorito}</button> <button onClick={()=> {excluiFavorito(favorito)}}>Remover</button> <br/></>
+                            )
+                        }else{
+                            return(
+                                <></>
+                            )
+                        }
+                        
+                    }) 
+                )
+        }
+    }    
+
+    const controleFavsVisibility = ()=> {
+        setFavsVisible(!FavsVisible)
+        
+    }
+
     return (
         <SearchBar>
             <label htmlFor="username">GitRepos</label> <br/>
             <input type="text" id='username' placeholder='username'
                 onChange={(event)=> setUserDigitado({...UserDigitado, user: event.target.value})}
             /> <br/>
-            <button type='submit' onClick={()=> LoadDados()}>Pesquisar</button>
-            {isVisible && User && <Perfil DadosPerfil={User} DadosRepos={Repos}></Perfil>}
+            <button type='submit' onClick={()=> LoadDados()}>Pesquisar</button> <br/> <button onClick={()=> {controleFavsVisibility()}}>Favoritos</button>
+            {FavsVisible && <p>{MostrarFavoritos()}</p>}
+            {isVisible && User && <Perfil DadosPerfil={User} DadosRepos={Repos}></Perfil>} <br />
             {error && <><br/>Usuário não encontrado!</>}
         </SearchBar>
     )

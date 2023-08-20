@@ -20,7 +20,18 @@ const SearchBar = styled.div`
         padding: 10px;
     }
     button:hover{
-        background-color: #bfbfbf
+        background-color: #bfbfbf;
+    }
+    a{
+        text-decoration: none;
+        color: white;
+        background-color: #4a4a4a;
+        padding: 14px;
+        border-radius: 10px;
+        margin: 5px;
+    }
+    a:hover{
+        opacity: 0.5;
     }
 `
 

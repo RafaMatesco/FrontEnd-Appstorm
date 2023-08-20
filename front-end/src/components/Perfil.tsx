@@ -6,8 +6,6 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
     var DadosRepos = props.DadosRepos;
     var tamanhoDadosRepos = (props.DadosRepos).length
 
-    console.log(Math.round(tamanhoDadosRepos/2))
-
     const MostraRepos = ()=> {
         return(
                 DadosRepos.map((repository:any) => {
@@ -23,6 +21,17 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
                     )
                 })
         )
+    }
+    const SaveFavoritos = ()=> {
+        var names = localStorage.getItem("name")
+
+        if(names != null){
+            localStorage.setItem("name", names+ " " +  DadosPerfil.login)
+        }else{
+            localStorage.setItem("name", DadosPerfil.login)
+        }
+        alert("favorito salvo!")   
+        
     }
 
     const UserBox = styled.div`
@@ -43,8 +52,12 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
         background-color: #4a4a4a;
 
         img{
-            border-radius: 500px;
+            border-radius: 20px;
             max-height: 60%;
+        }
+        button{
+            background-color: white;
+            color: black;
         }
     `;
 
@@ -60,7 +73,8 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
                     <div>
                         <h3>{DadosPerfil.name}</h3> 
                         Bio: <br />{DadosPerfil.bio} <br/><br/>
-                        Localização: <br />{DadosPerfil.location}
+                        Localização: <br />{DadosPerfil.location} <br/>
+                        <button onClick={()=> SaveFavoritos()}>Favoritar</button>
                     </div>
                     {MostraRepos()}
                 </UserBox>
