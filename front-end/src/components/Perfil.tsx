@@ -6,14 +6,19 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
     var DadosRepos = props.DadosRepos;
     var tamanhoDadosRepos = (props.DadosRepos).length
 
-    console.log((props.DadosRepos).length)
+    console.log(Math.round(tamanhoDadosRepos/2))
 
     const MostraRepos = ()=> {
         return(
                 DadosRepos.map((repository:any) => {
                     return(
                         <div>
-                            <h3>{repository.name}</h3>
+                            <ul>
+                                <u><h3>{repository.name}</h3></u>
+                                <li>Descrição: {repository.description}</li>
+                                <li>Linguagem: <i>{repository.language}</i></li>
+                            </ul>
+                            
                         </div>
                     )
                 })
@@ -23,11 +28,11 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
     const UserBox = styled.div`
         display: grid;
         grid-template-columns: 50% 50%;
-        grid-template-rows: repeat(${tamanhoDadosRepos-6}, 300px);
+        grid-template-rows: repeat(${Math.round(tamanhoDadosRepos/2)+1}, 1fr);
+        grid-template-rows: minmax(150px, 300px); 
 
         min-width: auto;
         min-height: auto;
-        max-height: auto;
         max-width: 30vw;
 
         padding: 2%;
@@ -39,8 +44,7 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
 
         img{
             border-radius: 500px;
-            max-height: 50%;
-            margin-right: 10%;
+            max-height: 60%;
         }
     `;
 
@@ -48,7 +52,7 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
         return (
                 <UserBox>
                     <div>
-                        <img src={DadosPerfil.avatar_url} alt="Imagem de perfil"></img>
+                        <img src={DadosPerfil.avatar_url} alt="Imagem de perfil"></img> <br />
                         Followers: {DadosPerfil.followers} <br />
                         Following: {DadosPerfil.following} <br /> <br />
                         Repositórios públicos: {DadosPerfil.public_repos}
