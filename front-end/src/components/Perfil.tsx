@@ -12,9 +12,10 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
                     return(
                         <div>
                             <ul>
-                                <u><h3>{repository.name}</h3></u>
+                                <h2>{repository.name}</h2>
                                 <li>Descrição: {repository.description}</li>
-                                <li>Linguagem: <i>{repository.language}</i></li>
+                                <li>Linguagem: <i>{repository.language}</i></li> <br/> <br/>
+                                <a href={repository.html_url} target="_blank">Ver no GitHub</a>
                             </ul>
                             
                         </div>
@@ -36,9 +37,10 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
 
     const UserBox = styled.div`
         display: grid;
+        grid-column-gap: 10px;
         grid-template-columns: 50% 50%;
         grid-template-rows: repeat(${Math.round(tamanhoDadosRepos/2)+1}, 1fr);
-        grid-template-rows: minmax(150px, 300px); 
+        grid-template-rows: minmax(150px, 320px); 
 
         min-width: auto;
         min-height: auto;
@@ -55,7 +57,7 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
             border-radius: 20px;
             max-height: 60%;
         }
-        button{
+        button, a{
             background-color: white;
             color: black;
         }
@@ -66,15 +68,16 @@ export default function Perfil(props:{DadosPerfil: Userprops, DadosRepos: any}){
                 <UserBox>
                     <div>
                         <img src={DadosPerfil.avatar_url} alt="Imagem de perfil"></img> <br />
-                        Followers: {DadosPerfil.followers} <br />
-                        Following: {DadosPerfil.following} <br /> <br />
-                        Repositórios públicos: {DadosPerfil.public_repos}
+                        Seguidores: {DadosPerfil.followers} <br />
+                        Seguindo: {DadosPerfil.following} <br /> <br />
+                        Repos públicos: {DadosPerfil.public_repos}
                     </div>
                     <div>
                         <h3>{DadosPerfil.name}</h3> 
                         Bio: <br />{DadosPerfil.bio} <br/><br/>
                         Localização: <br />{DadosPerfil.location} <br/>
-                        <button onClick={()=> SaveFavoritos()}>Favoritar</button>
+                        <button onClick={()=> SaveFavoritos()}>Favoritar</button> <br/> <br/>
+                        <a href={DadosPerfil.html_url} target="_Blank">Perfil No GitHub</a>
                     </div>
                     {MostraRepos()}
                 </UserBox>

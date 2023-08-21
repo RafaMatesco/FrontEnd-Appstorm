@@ -6,5 +6,6 @@ export type Userprops = {
     followers: string,
     following: string,
     avatar_url: string,
-    login: string
+    login: string,
+    html_url: string
 }

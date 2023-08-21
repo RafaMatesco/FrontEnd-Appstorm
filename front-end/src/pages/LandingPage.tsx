@@ -10,7 +10,7 @@ import GitHubService from '../services/GitHubService';
 
 export default function LandingPage(){
     const [UserDigitado, setUserDigitado] = useState({user:""})
-    const [User, setUser] = useState<Userprops | null>({name:"", location:"", bio:"", public_repos:"", followers:"", following:"", avatar_url:"", login:""})
+    const [User, setUser] = useState<Userprops | null>({name:"", location:"", bio:"", public_repos:"", followers:"", following:"", avatar_url:"", login:"", html_url:""})
     const [Repos, setRepos] = useState()
     const [isVisible, setIsVisible] = useState(false)
     const [FavsVisible, setFavsVisible] = useState(false)
@@ -35,7 +35,7 @@ export default function LandingPage(){
                 const dadosUser = ReqUser.data
                 const dadosRepos = ReqRepos.data
 
-                const {name, location, bio, public_repos, followers, following, avatar_url, login} = dadosUser
+                const {name, location, bio, public_repos, followers, following, avatar_url, login, html_url} = dadosUser
                 const Userdata: Userprops = {
                     name,
                     location,
@@ -44,7 +44,8 @@ export default function LandingPage(){
                     followers,
                     following,
                     avatar_url,
-                    login
+                    login,
+                    html_url
                 }
                 setUser(Userdata)
                 setRepos(dadosRepos)
@@ -72,7 +73,7 @@ export default function LandingPage(){
                 const dadosUser = ReqUser.data
                 const dadosRepos = ReqRepos.data
 
-                const {name, location, bio, public_repos, followers, following, avatar_url, login} = dadosUser
+                const {name, location, bio, public_repos, followers, following, avatar_url, login, html_url} = dadosUser
                 const Userdata: Userprops = {
                     name,
                     location,
@@ -81,7 +82,8 @@ export default function LandingPage(){
                     followers,
                     following,
                     avatar_url,
-                    login
+                    login,
+                    html_url
                 }
                 setUser(Userdata)
                 setRepos(dadosRepos)
